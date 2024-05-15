@@ -25,16 +25,32 @@
       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#formModal">Add Task</button>
     </div>
     <!-- Todo: Create a modal with a form to add tasks -->
-    <div id="task-modal" class="modal">
-      <h2>Add Task</h2>
-      <form>
-        <label>Task Title</label>
-        <input type="text" id="title">
-        <label>Task Due Date</label>
-        <input type="text" id="date">
-        <label>Task Description</label>
-        <textarea type="text" id="description"></textarea>
-      </form>
+    <div id="formModal" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="formModalLabel">Add Task</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="taskForm">
+              <div class="mb-3">
+                <label for="title" class="form-label">Task Title</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+              </div>
+              <div class="mb-3">
+                <label for="dueDate" class="form-label">Task Due Date</label>
+                <input type="text" class="form-control" id="dueDate" name="dueDate" required>
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Task Description</label>
+                <textarea class="form-control" id="description" name="description" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Add Task</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="row swim-lanes text-center justify-content-between">
@@ -57,16 +73,16 @@
             <div id="in-progress-cards"></div>
           </div>
         </div>
+      </div>
+      <div class="col-12 col-lg-4 d-flex">
+        <div id="done" class="card border-light mb-3 lane flex-grow-1">
+          <div class="card-header bg-white">
+            <h2 class="card-title mb-1">Done</h2>
+          </div>
+          <div class="card-body bg-light">
+            <div id="done-cards"></div>
+          </div>
         </div>
-        <div class="col-12 col-lg-4 d-flex">
-          <div id="done" class="card border-light mb-3 lane flex-grow-1">
-            <div class="card-header bg-white">
-              <h2 class="card-title mb-1">Done</h2>
-            </div>
-            <div class="card-body bg-light">
-              <div id="done-cards"></div>
-          </div>
-          </div>
       </div>
     </div>
   </div>
