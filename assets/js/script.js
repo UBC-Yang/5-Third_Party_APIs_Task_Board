@@ -13,9 +13,19 @@ function generateTaskId() {
 // Todo: create a function to create a task card
 function createTaskCard(task) {
     console.log(task);
+    const taskCards = []
+
+    const today = dayjs();
+    const taskDates = dayjs(task.dueDate);
+    let dateClass = '';
+    if (taskDates.isSame(today, 'day')) {
+        dateClass = 'warn'
+    } else if (taskDates.isBefore(today)) {
+        dateClass = 'late'
+    }
 
     const title = $('<h5>').addClass('card-title').text(task.title);
-    const dueDate = $('<h6>').addClass('card-subtitle mb-2 text-muted').text(`Due: ${task.dueDate}`);
+    const dueDate = $('<h6>').addClass('card-subtitle mb-2 text-light').text(`Due: ${task.dueDate}`);
     const description = $('<p>').addClass('card-text').text(task.description);
 
     const deleteButton = $('<button>')
@@ -23,7 +33,7 @@ function createTaskCard(task) {
         .text('Delete')
         .click(handleDeleteTask);
 
-    const cardBody = $('<div>').addClass('card-body')
+    const cardBody = $('<div>').addClass(`card-body ${dateClass}`)
         .append(title)
         .append(dueDate)
         .append(description)
@@ -34,7 +44,10 @@ function createTaskCard(task) {
         .attr('data-id', task.id)
         .append(cardBody);
 
-    return card;
+    const cardEl = $(card);
+    taskCards.push(cardEl);
+    
+    return taskCards; 
 }
 
 // Todo: create a function to render the task list and make cards draggable
@@ -63,13 +76,13 @@ function handleAddTask(event){
 
     const title = $('input[name="title"]').val();
     const dueDate = $('input[name="dueDate"]').val();
-    const description = $('input[name="description"]').val();
+    const description = $('textarea[name="description"]').val();
 
     const newTask = {
         id: generateTaskId(),
-        title,
-        dueDate,
-        description,
+        title: title,
+        dueDate: dueDate,
+        description: description,
         status: 'to-do'
     }
 
@@ -103,6 +116,7 @@ function handleDrop(event, ui) {
             taskList[i].status = updatedStatus;
         }
     }
+    
     renderTaskList()
 }
     
@@ -122,3 +136,4 @@ $(document).ready(function () {
         drop: handleDrop,
     })
 });
+

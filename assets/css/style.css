@@ -18,3 +18,13 @@ body {
 .task-card:hover {
   cursor: grab;
 }
+
+.warn {
+  background-color: orange;
+  color: white;
+}
+
+.late {
+  background-color: red;
+  color: white;
+}
