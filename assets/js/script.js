@@ -4,16 +4,18 @@ let nextId = JSON.parse(localStorage.getItem("nextId")) || 1;
 
 // Todo: create a function to generate a unique task id
 function generateTaskId() {
-    const Id = nextId;
+    const id = nextId;
     nextId++;
     localStorage.setItem('nextId', JSON.stringify(nextId));
-    return nextId
+    return id;
 }
 
 // Todo: create a function to create a task card
 function createTaskCard(task) {
+    console.log(task);
+
     const title = $('<h5>').addClass('card-title').text(task.title);
-    const dueDate = $('<h6>').addClass('card-dueDate').text(task.dueDate);
+    const dueDate = $('<h6>').addClass('card-subtitle mb-2 text-muted').text(`Due: ${task.dueDate}`);
     const description = $('<p>').addClass('card-text').text(task.description);
 
     const deleteButton = $('<button>')
@@ -51,6 +53,8 @@ function renderTaskList() {
         const taskCard = createTaskCard(task);
         lanes[task.status].append(taskCard);
     });
+
+    $('.card').draggable();
 }
 
 // Todo: create a function to handle adding a new task
@@ -80,25 +84,41 @@ function handleAddTask(event){
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
-    const card = (event.target || event.srcElement).closest(".card");
-    card.remove()
+    const card = $(event.target).closest('.card');
+    const id = card.attr('data-id');
+
+    taskList = taskList.filter(task => task.id != id);
+    localStorage.setItem('tasks', JSON.stringify(taskList));
+
+    card.remove(); 
 }
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-    
+
+    const taskId = ui.draggable[0].dataset.id;
+    const updatedStatus = event.target.id
+    for (let i = 0; i < taskList.length; i++) {
+        if (taskList[i].id == parseInt(taskId)) {
+            taskList[i].status = updatedStatus;
+        }
+    }
+    renderTaskList()
 }
+    
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
-    $("#dueDate").datepicker();
+    $("#dueDate").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
 
     $('#taskForm').on('submit', handleAddTask);
 
     renderTaskList();
 
-    $('lane').droppable({
+    $('.lane').droppable({
         accept: '.card',
-        drop: handleDrop
+        drop: handleDrop,
     })
 });
