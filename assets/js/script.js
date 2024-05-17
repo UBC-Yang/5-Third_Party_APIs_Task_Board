@@ -12,12 +12,12 @@ function generateTaskId() {
 
 // Todo: create a function to create a task card
 function createTaskCard(task) {
-    console.log(task);
-    const taskCards = []
+    const taskCards = [];
 
     const today = dayjs();
     const taskDates = dayjs(task.dueDate);
     let dateClass = '';
+
     if (taskDates.isSame(today, 'day')) {
         dateClass = 'warn'
     } else if (taskDates.isBefore(today)) {
@@ -25,7 +25,7 @@ function createTaskCard(task) {
     }
 
     const title = $('<h5>').addClass('card-title').text(task.title);
-    const dueDate = $('<h6>').addClass('card-subtitle mb-2 text-light').text(`Due: ${task.dueDate}`);
+    const dueDate = $('<h6>').addClass('card-subtitle mb-2').text(`Due: ${task.dueDate}`);
     const description = $('<p>').addClass('card-text').text(task.description);
 
     const deleteButton = $('<button>')
@@ -38,7 +38,11 @@ function createTaskCard(task) {
         .append(dueDate)
         .append(description)
         .append(deleteButton);
-
+    
+    if (task.status === 'done') {
+        cardBody.addClass('done-card');
+    }
+    
     const card = $('<div>')
         .addClass('card mb-3')
         .attr('data-id', task.id)
@@ -111,12 +115,14 @@ function handleDrop(event, ui) {
 
     const taskId = ui.draggable[0].dataset.id;
     const updatedStatus = event.target.id
+
     for (let i = 0; i < taskList.length; i++) {
         if (taskList[i].id == parseInt(taskId)) {
             taskList[i].status = updatedStatus;
         }
     }
-    
+
+    localStorage.setItem('tasks', JSON.stringify(taskList));
     renderTaskList()
 }
     
@@ -124,7 +130,7 @@ function handleDrop(event, ui) {
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
     $("#dueDate").datepicker({
-        dateFormat: 'yy-mm-dd'
+        dateFormat: 'mm-dd-yy'
     });
 
     $('#taskForm').on('submit', handleAddTask);
